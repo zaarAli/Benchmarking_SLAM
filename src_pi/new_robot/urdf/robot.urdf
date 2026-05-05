@@ -1,0 +1,7 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="new_robot">
+  <!-- Include the xacro file -->
+  <xacro:include filename="$(find new_robot)/urdf/robot.xacro"/>
+  
+  <!-- Use the xacro macro defined in robot.xacro -->
+  <xacro:robot/>
+</robot>

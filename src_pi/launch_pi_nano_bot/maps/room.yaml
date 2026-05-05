@@ -1,0 +1,6 @@
+image: /home/yusha/catkin_ws/src/launch_pi_nano_bot/maps/room.pgm
+resolution: 0.050000
+origin: [-7.347275, -5.653477, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

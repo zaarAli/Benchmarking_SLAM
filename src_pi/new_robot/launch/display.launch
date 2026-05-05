@@ -1,0 +1,19 @@
+<launch>
+  <!-- Load the URDF into the parameter server -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find new_robot)/urdf/robot.urdf'" />
+
+  <!-- Publish the robot state -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Publish joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+  <!-- Static transform publisher for world to map -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_map" args="0 0 0 0 0 0 world map" />
+
+  <!-- Static transform publisher for base_link to map -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_map" args="0 0 0 0 0 0 map base_link" />
+
+  <!-- Launch RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find new_robot)/rviz/robot.rviz" required="true" />
+</launch>

@@ -1,0 +1,66 @@
+<launch>
+  <!-- Load the URDF into the parameter server -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find new_robot)/urdf/robot.urdf'" />
+
+
+  <!-- Publish the robot state -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="50.0" />
+  </node>
+
+  
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="false"/>
+  </node>
+
+
+
+  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+    <param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate"     type="int"    value="115200"/>
+    <param name="frame_id"            type="string" value="rplidar_link"/>
+    <param name="inverted"            type="bool"   value="false"/>
+    <param name="angle_compensate"    type="bool"   value="true"/>
+  </node>
+
+  
+
+  <!-- Start Google Cartographer node with custom configuration file-->
+  <node name="cartographer_node" pkg="cartographer_ros" type="cartographer_node" args="
+        -configuration_directory
+            $(find gbot_core)/configuration_files
+        -configuration_basename gbot_lidar_2d.lua" output="screen">
+  </node>
+
+  <!-- Additional node which converts Cartographer map into ROS occupancy grid map. Not used and can be skipped in this case -->
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros" type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+
+  <!-- Start RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find new_robot)/rviz/rplidar_config.rviz" output="screen" />
+</launch>
+
+
+
+  <!-- Launch the Gazebo simulation -->
+  <!-- <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find new_robot)/worlds/robot_world.world"/>
+  </include> -->
+
+    <!-- Static transform publisher for world to map -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_map" args="0 0 0 0 0 0 world map" /> -->
+
+  <!-- Static transform publisher for base_link to map -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_map" args="0 0 0 0 0 0 map base_link" /> -->
+
+  <!-- Optional: Add a static transform for lidar frame -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="lidar_to_base" args="0 0 0.1 0 0 0 base_link rplidar_link" /> -->
+
+  <!-- Spawn the robot in Gazebo -->
+  <!-- <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model robot -x 0 -y 0 -z 0.2" /> -->
+
+  <!-- Load the controller manager -->
+  <!-- <node name="controller_manager_main" pkg="controller_manager" type="controller_manager" output="screen" /> -->
+
+  <!-- Load the controller spawner -->
+  <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" args="diff_drive_controller" output="screen" /> -->
