@@ -1,0 +1,81 @@
+<launch>
+  <!-- Load robot model -->
+  <param name="robot_description" 
+         command="$(find xacro)/xacro --inorder $(find new_robot)/urdf/robot.xacro" />
+
+  <!-- Publish TF transforms -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="40.0" />
+  </node>
+
+  <!-- Publish joint states (needed even for fixed joints) -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="false"/>
+  </node>
+
+  #### Start RPLIDAR sensor node which provides LaserScan data ####
+  <node name="rplidarNode" pkg="rplidar_ros" type="rplidarNode" output="screen">
+    <param name="serial_port" type="string" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate" type="int" value="115200"/>
+    <param name="frame_id" type="string" value="rplidar_link"/> <!-- Set the frame_id to rplidar_link -->
+    <param name="inverted" type="bool" value="false"/>
+    <param name="angle_compensate" type="bool" value="true"/>
+  </node>
+
+
+  #### start rviz ################################################
+  <node pkg="rviz" type="rviz" name="rviz" 
+    args="-d $(find laser_scan_matcher)/demo/demo_gmapping.rviz"/>
+
+  #### start the laser scan_matcher ##############################
+  <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
+    name="laser_scan_matcher_node" output="screen">
+
+    <param name="fixed_frame" value = "odom"/>
+    <param name="max_iterations" value="10"/>
+
+  </node>
+
+  #### start gmapping ############################################
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <param name="map_update_interval" value="1.0"/>
+    <param name="maxUrange" value="5.0"/>
+    <param name="sigma" value="0.1"/>
+    <param name="kernelSize" value="1"/>
+    <param name="lstep" value="0.15"/>
+    <param name="astep" value="0.15"/>
+    <param name="iterations" value="1"/>
+    <param name="lsigma" value="0.1"/>
+    <param name="ogain" value="3.0"/>
+    <param name="lskip" value="1"/>
+    <param name="srr" value="0.1"/>
+    <param name="srt" value="0.2"/>
+    <param name="str" value="0.1"/>
+    <param name="stt" value="0.2"/>
+    <param name="linearUpdate" value="1.0"/>
+    <param name="angularUpdate" value="0.5"/>
+    <param name="temporalUpdate" value="0.4"/>
+    <param name="resampleThreshold" value="0.5"/>
+    <param name="particles" value="10"/>
+    <param name="xmin" value="-5.0"/>
+    <param name="ymin" value="-5.0"/>
+    <param name="xmax" value="5.0"/>
+    <param name="ymax" value="5.0"/>
+    <param name="delta" value="0.02"/>
+    <param name="llsamplerange" value="0.01"/>
+    <param name="llsamplestep" value="0.05"/>
+    <param name="lasamplerange" value="0.05"/>
+    <param name="lasamplestep" value="0.05"/>
+  </node>
+
+  <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="trajectory_server" ns="pioneer" >
+    <param name="/target_frame_name" value="map" />
+    <param name="/source_frame_name" value="base_link" />
+    <param name="/trajectory_update_rate" value="10.0" />
+    <param name="/trajectory_publish_rate" value="10.0" />
+  </node>
+
+</launch>
+
+
+

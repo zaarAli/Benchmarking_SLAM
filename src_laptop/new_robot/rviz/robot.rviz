@@ -1,0 +1,20 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: "rviz/RobotModel"
+      Enabled: true
+      Name: "Robot Model"
+      Robot Description: "robot_description"
+  Enabled: true
+  Name: "Visualization Manager"
+  Tools:
+    - Class: "rviz/Interact"
+    - Class: "rviz/MoveCamera"
+    - Class: "rviz/Select"
+    - Class: "rviz/FocusCamera"
+  Views:
+    Current:
+      Class: "rviz/Orbit"
+      Distance: 3
+      Focal Point: [0, 0, 0]
+      Name: "Current View"

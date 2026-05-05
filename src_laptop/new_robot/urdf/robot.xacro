@@ -1,0 +1,259 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+  <xacro:macro name="robot" params="">
+    <!-- Define robot properties -->
+    <xacro:property name="robot_name" value="robot"/>
+    
+    <!-- Include RPLIDAR sensor -->
+    <xacro:include filename="$(find new_robot)/urdf/rplidar.xacro"/>
+  
+    <!-- Define robot links -->
+    <link name="world"/>
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <box size="1 0.5 0.2"/>
+        </geometry>
+        <material name="red">
+          <color rgba="1 0 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="1 0.5 0.2"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="5.0"/>
+        <origin xyz="0 0 0.15"/>
+        <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+      </inertial>
+    </link>
+    
+    <!-- Define plate top link -->
+    <link name="plate_top_link">
+      <visual>
+        <geometry>
+          <box size="0.2 0.2 0.01"/>
+        </geometry>
+        <material name="blue">
+          <color rgba="0 0 1 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.2 0.2 0.01"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.1"/>
+        <origin xyz="0 0 0.1"/>
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+      </inertial>
+    </link>
+    
+    <!-- Define wheels -->
+    <link name="wheel_front_left">
+      <visual>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <material name="yellow">
+          <color rgba="1 1 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      </collision>
+      <inertial>
+        <mass value="0.5"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+      </inertial>
+    </link>
+    
+    <link name="wheel_front_right">
+      <visual>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <material name="yellow">
+          <color rgba="1 1 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      </collision>
+      <inertial>
+        <mass value="0.5"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+      </inertial>
+    </link>
+    
+    <link name="wheel_back_left">
+      <visual>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <material name="yellow">
+          <color rgba="1 1 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      </collision>
+      <inertial>
+        <mass value="0.5"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+      </inertial>
+    </link>
+    
+    <link name="wheel_back_right">
+      <visual>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <material name="yellow">
+          <color rgba="1 1 0 1"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      </collision>
+      <inertial>
+        <mass value="0.5"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+      </inertial>
+    </link>
+    
+    <!-- Define robot joints -->
+    <joint name="base_joint" type="fixed">
+      <parent link="world"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+    </joint>
+    
+    <joint name="plate_top_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="plate_top_link"/>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    </joint>
+    
+    <joint name="joint_wheel_front_left" type="continuous">
+      <parent link="base_link"/>
+      <child link="wheel_front_left"/>
+      <origin xyz="0.4 0.25 -0.1" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+    
+    <joint name="joint_wheel_front_right" type="continuous">
+      <parent link="base_link"/>
+      <child link="wheel_front_right"/>
+      <origin xyz="0.4 -0.25 -0.1" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+    
+    <joint name="joint_wheel_back_left" type="continuous">
+      <parent link="base_link"/>
+      <child link="wheel_back_left"/>
+      <origin xyz="-0.4 0.25 -0.1" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+    
+    <joint name="joint_wheel_back_right" type="continuous">
+      <parent link="base_link"/>
+      <child link="wheel_back_right"/>
+      <origin xyz="-0.4 -0.25 -0.1" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  
+    <!-- Add transmissions for the wheels -->
+    <transmission name="trans_wheel_front_left">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_wheel_front_left"/>
+      <actuator name="motor_wheel_front_left">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+  
+    <transmission name="trans_wheel_front_right">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_wheel_front_right"/>
+      <actuator name="motor_wheel_front_right">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+  
+    <transmission name="trans_wheel_back_left">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_wheel_back_left"/>
+      <actuator name="motor_wheel_back_left">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+  
+    <transmission name="trans_wheel_back_right">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_wheel_back_right"/>
+      <actuator name="motor_wheel_back_right">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- Instantiate the macro -->
+  <xacro:robot/>
+
+  <!-- Rest of the robot (imu joint and gazebo plugin) -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+  </gazebo>
+
+
+  <link name="imu_link"/>
+  <joint name="base_to_imu" type="fixed">
+    <axis rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>10</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>20.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+</robot>

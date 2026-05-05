@@ -1,0 +1,9 @@
+diff_drive_controller:
+  type: "diff_drive_controller/DiffDriveController"
+  left_wheel: ['joint_wheel_back_left', 'joint_wheel_front_left']
+  right_wheel: ['joint_wheel_back_right', 'joint_wheel_front_right']
+  publish_wheel_joint_controller_state: true
+  wheel_separation: 0.5  # Adjust based on your robot's dimensions
+  wheel_radius: 0.1      # Adjust based on your robot's wheel radius
+  cmd_vel_timeout: 0.5
+  publish_rate: 50
